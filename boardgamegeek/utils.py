@@ -174,18 +174,7 @@ def xml_subelement_attr_by_attr(xml_elem, subelement, filter_attr, filter_value,
         return None
 
     for subel in xml_elem.findall('.//{}[@{}="{}"]'.format(subelement, filter_attr, filter_value)):
-        value = subel.attrib.get(attribute)
-        if value is None:
-            value = default
-        elif convert:
-            try:
-                value = convert(value)
-            except:
-                if quiet:
-                    value = default
-                else:
-                    raise
-        return value
+        return xml_attr(subel, attribute, convert=convert, default=default, quiet=quiet)
     return default
 
 
@@ -220,17 +209,7 @@ def xml_subelement_attr(xml_elem, subelement, convert=None, attribute="value", d
     if subel is None:
         value = default
     else:
-        value = subel.attrib.get(attribute)
-        if value is None:
-            value = default
-        elif convert:
-            try:
-                value = convert(value)
-            except:
-                if quiet:
-                    value = default
-                else:
-                    raise
+        value = xml_attr(subel, attribute, convert=convert, default=default, quiet=quiet)
     return value
 
 
@@ -262,17 +241,7 @@ def xml_subelement_attr_list(xml_elem, subelement, convert=None, attribute="valu
     subel = xml_elem.findall(subelement)
     res = []
     for e in subel:
-        value = e.attrib.get(attribute)
-        if value is None:
-            value = default
-        elif convert:
-            try:
-                value = convert(value)
-            except:
-                if quiet:
-                    value = default
-                else:
-                    raise
+        value = xml_attr(e, attribute, convert=convert, default=default, quiet=quiet)
         res.append(value)
 
     return res
