@@ -20,7 +20,7 @@ class CacheBackendMemory(CacheBackend):
             int(ttl)
         except ValueError:
             raise BGGValueError
-        self.cache = requests_cache.core.CachedSession(backend="memory", expire_after=ttl, allowable_codes=(200,))
+        self.cache = requests_cache.CachedSession(backend="memory", expire_after=ttl, allowable_codes=(200,))
 
 
 class CacheBackendSqlite(CacheBackend):
@@ -30,7 +30,7 @@ class CacheBackendSqlite(CacheBackend):
         except ValueError:
             raise BGGValueError
 
-        self.cache = requests_cache.core.CachedSession(cache_name=path,
+        self.cache = requests_cache.CachedSession(cache_name=path,
                                                        backend="sqlite",
                                                        expire_after=ttl,
                                                        extension="",
