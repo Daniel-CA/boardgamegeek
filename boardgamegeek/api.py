@@ -18,6 +18,7 @@ import datetime
 import logging
 import sys
 import warnings
+import urllib.parse
 
 from .objects.user import User
 from .objects.search import SearchResult
@@ -110,6 +111,7 @@ class BGGCommon(object):
         self._plays_api_url = api_endpoint + "/plays"
         self._hot_api_url = api_endpoint + "/hot"
         self._collection_api_url = api_endpoint + "/collection"
+        self._login_url = urllib.parse.urljoin(api_endpoint, "/login/api/v1")
         try:
             self._timeout = float(timeout)
             self._retries = int(retries)
@@ -224,6 +226,36 @@ class BGGCommon(object):
                 break
 
         return guild
+
+    def log_in(self, user_name, password):
+        """
+		Logs in to site.
+
+        :param str user_name: user name to log-in as
+        :param str password: secret password for user
+        :retval str: error message if log-in failed.
+        :retval None: if log-in successful.
+        """
+        body = {'credentials': {'username': user_name, 'password': password}}
+        # will set authentication cookies on self.requests_session
+        response = self.requests_session.post(self._login_url, json=body)
+        if response.status_code >= 400:
+            if 'application/json' == response.headers['Content-Type']:
+                response.cooked = response.json()
+                response.error = response.cooked['errors']['message']
+            else:
+                response.error = response.text
+            if response.status_code >= 500:
+                # server error
+                pass
+            else:
+                # client error; likely invalid credentials
+                pass
+            return response.error
+        else:
+            return None
+
+    sign_in = log_in
 
     # TODO: refactor
     def user(self, name, progress=None, buddies=True, guilds=True, hot=True, top=True, domain=BGGRestrictDomainTo.BOARD_GAME):
