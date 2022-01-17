@@ -18,6 +18,9 @@
 			</ranks>
 			</rating>
 		</stats>
+		<privateinfo pp_currency="USD" pricepaid="15" cv_currency="CAD" currvalue="18" quantity="1" acquisitiondate="2014-01-01" acquiredfrom="garage sale" inventorylocation="home">
+			<privatecomment>Private comment.</privatecomment>
+		</privateinfo>
 		<comment>Public comment.</comment>
 		<status own="0" prevowned="0" fortrade="0" want="0" wanttoplay="0" wanttobuy="0" wishlist="1" wishlistpriority="3" preordered="0" lastmodified="2014-07-31 07:58:19" />
 		<numplays>5</numplays>

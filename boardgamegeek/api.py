@@ -535,7 +535,7 @@ class BGGCommon(object):
                    version=None, own=None, rated=None, played=None, commented=None, trade=None, want=None, wishlist=None,
                    wishlist_prio=None, preordered=None, want_to_play=None, want_to_buy=None, prev_owned=None,
                    has_parts=None, want_parts=None, min_rating=None, rating=None, min_bgg_rating=None, bgg_rating=None,
-                   min_plays=None, max_plays=None, collection_id=None, modified_since=None):
+                   min_plays=None, max_plays=None, private=None, collection_id=None, modified_since=None):
         """
         Returns an user's game collection
 
@@ -565,6 +565,7 @@ class BGGCommon(object):
         :param double rating: return items rated by the user with a maximum of ``rating``
         :param double min_bgg_rating : return items rated on BGG with a minimum of ``min_bgg_rating``
         :param double bgg_rating: return items rated on BGG with a maximum of ``bgg_rating``
+		:param bool private: include private game info in results. Only works when viewing your own collection and you are logged in.
         :param int collection_id: restrict results to the collection specified by this id
         :param str modified_since: restrict results to those whose status (own, want, etc.) has been changed/added since ``modified_since``. Format: ``YY-MM-DD`` or ``YY-MM-DD HH:MM:SS``
 
@@ -657,6 +658,9 @@ class BGGCommon(object):
                 params["bggrating"] = bgg_rating
             else:
                 raise BGGValueError("invalid 'bgg_rating'")
+
+        if private is not None and private:
+            params["showprivate"] = 1
 
         if collection_id is not None:
             params["collid"] = collection_id

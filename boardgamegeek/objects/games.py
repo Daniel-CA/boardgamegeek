@@ -729,6 +729,78 @@ class CollectionBoardGame(BaseGame):
         """
         return self._data.get("comment", "")
 
+    @property
+    def private_comment(self):
+        """
+        :return: private comment left by user
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("comment")
+
+    @property
+    def paid(self):
+        """
+        :return: price paid by user (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("paid")
+
+    @property
+    def currency(self):
+        """
+        :return: currency for price paid by user (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("currency")
+
+    @property
+    def currvalue(self):
+        """
+        :return: price paid by user (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("currvalue")
+
+    @property
+    def cv_currency(self):
+        """
+        :return: currency for price paid by user (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("cv_currency")
+
+    @property
+    def quantity(self):
+        """
+        :return: quantity owned by user (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("quantity")
+
+    @property
+    def acquired_on(self):
+        """
+        :return: acquisition date (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("acquired_on")
+
+    @property
+    def acquired_from(self):
+        """
+        :return: where game was acquired from (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("acquired_from")
+
+    @property
+    def location(self):
+        """
+        :return: where game is inventoried (private)
+        :rtype: str
+        """
+        return self._data.get("private", {}).get("location")
+
 
 class BoardGame(BaseGame):
     """

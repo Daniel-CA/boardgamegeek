@@ -117,6 +117,7 @@ def test_add_collection_items_from_xml_full(xml_collection_full, mocker):
 
     item = xml_collection_full.find("item[@subtype='boardgame']")
     stats = item.find("stats")
+    private = item.find("privateinfo")
     expected = {
         "id": int(item.attrib.get("objectid", MISSING_INT_VAL)),
         "name": item.findtext("name", default=MISSING_STR_VAL),
@@ -131,6 +132,17 @@ def test_add_collection_items_from_xml_full(xml_collection_full, mocker):
             "ranks":[],
         },
         "rating": float(stats.find("rating").attrib.get("value", MISSING_FLOAT_VAL)),
+        "private": {
+            "comment": private.findtext("privatecomment", default=MISSING_STR_VAL),
+			"paid": float(private.attrib.get("pricepaid", MISSING_FLOAT_VAL)),
+			"currency": private.attrib.get("pp_currency", MISSING_STR_VAL),
+			"currvalue": float(private.attrib.get("currvalue", MISSING_FLOAT_VAL)),
+			"cv_currency": private.attrib.get("cv_currency", MISSING_STR_VAL),
+			"quantity": int(private.attrib.get("quantity", MISSING_INT_VAL)),
+			"acquired_on": private.attrib.get("acquisitiondate", MISSING_STR_VAL),
+			"acquired_from": private.attrib.get("acquiredfrom", MISSING_STR_VAL),
+			"location": private.attrib.get("inventorylocation", MISSING_STR_VAL),
+        }
     }
 
     del stats.attrib["numowned"]

@@ -82,8 +82,16 @@ def test_creating_collection_out_of_raw_data():
                                         "id": "1", "type": "subtype", "name": "boardgame", "friendlyname": "friendly",
                                         "value": "10", "bayesaverage": "0.51"
                                     }]
-                                }
-
+                                },
+                                "private": {
+                                    "comment": "private comment",
+                                    "paid":42.0, "currency":"USD",
+									"currvalue": 23.0, "cv_currency":"EUR",
+                                    "quantity":"1",
+                                    "acquired_on": "2000-01-01",
+									"acquired_from": "store",
+									"location": "home",
+                                },
                                }]})
 
     assert len(c) == 1
@@ -105,6 +113,17 @@ def test_creating_collection_out_of_raw_data():
     assert ci.bgg_rank == 10
     assert ci.users_rated == 123
     assert ci.rating_bayes_average is None
+
+    assert ci.private is not None
+    assert ci.paid == 42.0
+    assert ci.currency == "USD"
+    assert ci.currvalue == 23.0
+    assert ci.cv_currency == "EUR"
+    assert ci.private_comment == "private comment"
+    assert ci.quantity == "1"
+    assert ci.acquired_on == "2000-01-01"
+    assert ci.acquired_from == "store"
+    assert ci.location == "home"
 
     with pytest.raises(BGGError):
         # raises exception on invalid game data
