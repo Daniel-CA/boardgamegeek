@@ -7,6 +7,47 @@ import boardgamegeek.utils as bggutil
 from _common import *
 from boardgamegeek.objects.things import Thing
 
+def test_get_xml_attr(xml):
+
+    node = bggutil.xml_attr(None, "attr")
+    assert node is None
+
+    node = bggutil.xml_attr(None, "attr", default='default')
+    assert node is None
+
+    node = bggutil.xml_attr(xml, None)
+    assert node is None
+
+    node = bggutil.xml_attr(xml, None, default='default')
+    assert node is None
+
+    node = bggutil.xml_attr(xml, "")
+    assert node is None
+
+    node = bggutil.xml_attr(xml.find("node1"), "attr")
+    assert node == "hello1"
+
+    node = bggutil.xml_attr(xml.find("node1"), "int_attr", convert=int)
+    assert node == 1
+
+    # test that default works
+    node = bggutil.xml_attr(xml.find("node_thats_missing"), "attr", default="default")
+    assert node == None
+
+    node = bggutil.xml_attr(xml.find("node1"), "attribute_thats_missing", default=1234)
+    assert node == 1234
+
+    # test quiet
+    with pytest.raises(Exception):
+        # attr can't be converted to int
+        node = bggutil.xml_attr(xml.find("node1"), "attr", convert=int)
+
+    node = bggutil.xml_attr(xml.find("node1"), "attr", convert=int, quiet=True)
+    assert node == None
+
+    node = bggutil.xml_attr(xml.find("node1"), "attr", convert=int, default=999, quiet=True)
+    assert node == 999
+
 def test_get_xml_subelement_attr(xml):
 
     node = bggutil.xml_subelement_attr(None, "hello")

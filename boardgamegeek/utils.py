@@ -118,6 +118,31 @@ class DictObject(object):
         """
         return self._data
 
+def xml_attr(xml_elem, attribute, convert=None, default=None, quiet=False):
+    """
+    Get a (possibly missing) attribute from an element, optionally converting it.
+
+    :param xml_elem: element to get the attribute from
+    :param attribute: name of the attribute to get
+    :param convert: if not ``None``, a callable to perform the conversion of this attribute to a certain object type
+    :param default: default value if the subelement or attribute is not found
+    :param quiet: if ``True``, don't raise exception from conversions; return default instead
+    :return: value of the attribute or ``None`` in error cases
+
+    """
+    if xml_elem is None or not attribute:
+        return None
+
+    value = xml_elem.attrib.get(attribute, default)
+    if value != default and convert:
+        try:
+            value = convert(value)
+        except:
+            if quiet:
+                value = default
+            else:
+                raise
+    return value
 
 def xml_subelement_attr_by_attr(xml_elem, subelement, filter_attr, filter_value, convert=None, attribute="value", default=None, quiet=False):
     """
@@ -149,18 +174,7 @@ def xml_subelement_attr_by_attr(xml_elem, subelement, filter_attr, filter_value,
         return None
 
     for subel in xml_elem.findall('.//{}[@{}="{}"]'.format(subelement, filter_attr, filter_value)):
-        value = subel.attrib.get(attribute)
-        if value is None:
-            value = default
-        elif convert:
-            try:
-                value = convert(value)
-            except:
-                if quiet:
-                    value = default
-                else:
-                    raise
-        return value
+        return xml_attr(subel, attribute, convert=convert, default=default, quiet=quiet)
     return default
 
 
@@ -195,17 +209,7 @@ def xml_subelement_attr(xml_elem, subelement, convert=None, attribute="value", d
     if subel is None:
         value = default
     else:
-        value = subel.attrib.get(attribute)
-        if value is None:
-            value = default
-        elif convert:
-            try:
-                value = convert(value)
-            except:
-                if quiet:
-                    value = default
-                else:
-                    raise
+        value = xml_attr(subel, attribute, convert=convert, default=default, quiet=quiet)
     return value
 
 
@@ -237,17 +241,7 @@ def xml_subelement_attr_list(xml_elem, subelement, convert=None, attribute="valu
     subel = xml_elem.findall(subelement)
     res = []
     for e in subel:
-        value = e.attrib.get(attribute)
-        if value is None:
-            value = default
-        elif convert:
-            try:
-                value = convert(value)
-            except:
-                if quiet:
-                    value = default
-                else:
-                    raise
+        value = xml_attr(e, attribute, convert=convert, default=default, quiet=quiet)
         res.append(value)
 
     return res

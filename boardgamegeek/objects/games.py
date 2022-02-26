@@ -58,6 +58,20 @@ class PlayerSuggestion(DictObject):
             return int(self.player_count)
 
 
+class BoardGamePrivate(DictObject):
+    """
+    Private user info for a board game
+    """
+    def __getattr__(self, item):
+        # allow accessing user's variables using .attribute
+        try:
+            return self._data[item]
+        except:
+            if item.startswith('_'):
+                raise AttributeError
+            return None
+
+
 class BoardGameStats(DictObject):
     """
     Statistics about a board game
@@ -596,6 +610,7 @@ class CollectionBoardGame(BaseGame):
 
     def __init__(self, data):
         super(CollectionBoardGame, self).__init__(data)
+        self._private = BoardGamePrivate(data.get('private', {}))
 
     def __repr__(self):
         return "CollectionBoardGame (id: {})".format(self.id)
@@ -618,6 +633,10 @@ class CollectionBoardGame(BaseGame):
         log.info("comment           : {}".format(self.comment))
         for v in self._versions:
             v._format(log)
+
+    @property
+    def private(self):
+        return self._private
 
     @property
     def lastmodified(self):
@@ -728,6 +747,78 @@ class CollectionBoardGame(BaseGame):
         :rtype: str
         """
         return self._data.get("comment", "")
+
+    @property
+    def private_comment(self):
+        """
+        :return: private comment left by user
+        :rtype: str
+        """
+        return self._private.comment
+
+    @property
+    def paid(self):
+        """
+        :return: price paid by user (private)
+        :rtype: str
+        """
+        return self._private.paid
+
+    @property
+    def currency(self):
+        """
+        :return: currency for price paid by user (private)
+        :rtype: str
+        """
+        return self._private.currency
+
+    @property
+    def currvalue(self):
+        """
+        :return: price paid by user (private)
+        :rtype: str
+        """
+        return self._private.currvalue
+
+    @property
+    def cv_currency(self):
+        """
+        :return: currency for price paid by user (private)
+        :rtype: str
+        """
+        return self._private.cv_currency
+
+    @property
+    def quantity(self):
+        """
+        :return: quantity owned by user (private)
+        :rtype: str
+        """
+        return self._private.quantity
+
+    @property
+    def acquired_on(self):
+        """
+        :return: acquisition date (private)
+        :rtype: str
+        """
+        return self._private.acquired_on
+
+    @property
+    def acquired_from(self):
+        """
+        :return: where game was acquired from (private)
+        :rtype: str
+        """
+        return self._private.acquired_from
+
+    @property
+    def location(self):
+        """
+        :return: where game is inventoried (private)
+        :rtype: str
+        """
+        return self._private.location
 
 
 class BoardGame(BaseGame):
